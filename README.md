@@ -9,6 +9,9 @@ recipients with T-cell mediated rejection (TCMR), integrating whole-slide pathol
 - [Pipeline](#pipeline)
 - [Setup](#setup)
 - [Reproduce](#reproduce)
+- [Results](#results)
+- [Figures](#figures)
+- [Model configuration](#model-configuration)
 - [Data availability](#data-availability)
 - [License](#license)
 
@@ -39,10 +42,54 @@ uv run python -m src.evaluation      # KFold + LOPO + label-permutation control
 uv run python -m src.robustness      # patch-count / order / color-baseline checks
 uv run python -m src.supplementary   # PCA scree, hyperparameter grid, variable encoding
 uv run python -m src.baseline_severity  # baseline-severity confound + inter-biopsy interval
+uv run python -m src.figures         # AUROC forest plot, scree, clinical importance
 uv run --extra test python -m pytest tests -v   # unit tests
 ```
 
 Outputs are written to the `output_dir` set in `config.yaml`.
+
+## Results
+
+Patient-level pooled out-of-fold performance (n = 55 patients, each predicted once),
+95% CIs by patient bootstrap. Best estimator shown per modality family; the full
+matrix is written to `results.csv`.
+
+| Modality              | AUROC (95% CI)     | Sensitivity (95% CI) | Specificity (95% CI) |
+|-----------------------|--------------------|----------------------|----------------------|
+| Clinical (RF)         | 0.51 (0.35, 0.66)  | 0.37 (0.19, 0.56)    | 0.64 (0.46, 0.81)    |
+| Pathology (RF)        | 0.81 (0.69, 0.91)  | 0.56 (0.36, 0.74)    | 0.89 (0.77, 1.00)    |
+| Early fusion (RF)     | 0.85 (0.74, 0.93)  | 0.52 (0.33, 0.72)    | 0.89 (0.77, 1.00)    |
+| Late fusion (RF + RF) | 0.80 (0.67, 0.91)  | 0.52 (0.33, 0.71)    | 0.93 (0.82, 1.00)    |
+
+Permutation and leave-one-patient-out controls (`src/evaluation.py`) confirm the pathology
+signal is label-driven, not leakage: real-label LOPO AUROC stays high (RF 0.92, SVM 0.91)
+while label-permuted AUROC collapses to chance (RF 0.50, SVM 0.49).
+
+## Figures
+
+PCA scree of the pooled per-patient pathology embeddings (the first 5 components, used
+downstream, capture 46% of variance):
+
+![PCA scree plot](docs/figures/pca_scree.png)
+
+Clinical feature contributions (SHAP summary from the clinical model):
+
+![Clinical feature importance](docs/figures/feature_importance_shap.png)
+
+Both panels are regenerated from your own inputs by `src/figures.py` (the scree directly;
+a model-agnostic permutation-importance variant of the clinical ranking). No patient images
+or per-patient rows are shipped with this repository.
+
+## Model configuration
+
+Hyperparameters are tuned per fold by `GridSearchCV` (3-fold inner CV, `roc_auc`):
+
+| Model | Search space                                                         | Combinations |
+|-------|----------------------------------------------------------------------|--------------|
+| LR    | C [0.01, 0.1, 1, 10]; penalty [l1, l2]; solver liblinear             | 8            |
+| SVM   | C [0.1, 1, 10]; kernel [rbf, linear]; gamma [scale, auto]            | 12           |
+| RF    | n_estimators [50, 100, 200]; max_depth [3, 4, 5, None]; criterion [gini, entropy] | 24 |
+| GB    | learning_rate [0.1, 0.2, 0.3]; n_estimators [100, 200, 300]; max_depth [3, 4, 5] | 27 |
 
 ## Data availability
 
