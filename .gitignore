@@ -14,8 +14,6 @@
 # Clinical/tabular data containing dates or identifiers
 *.csv
 
-
-
 # Derived images
 *_attention_maps*/
 *_heatmaps*/
