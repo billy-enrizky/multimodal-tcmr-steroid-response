@@ -43,6 +43,7 @@ uv run python -m src.robustness      # patch-count / order / color-baseline chec
 uv run python -m src.supplementary   # PCA scree, hyperparameter grid, variable encoding
 uv run python -m src.baseline_severity  # baseline-severity confound + inter-biopsy interval
 uv run python -m src.figures         # AUROC forest plot, scree, clinical importance
+uv run python -m src.pooling_ablation  # pathology AUROC under each patch-pooling scheme
 uv run --extra test python -m pytest tests -v   # unit tests
 ```
 
@@ -64,6 +65,10 @@ matrix is written to `results.csv`.
 Permutation and leave-one-patient-out controls (`src/evaluation.py`) confirm the pathology
 signal is label-driven, not leakage: real-label LOPO AUROC stays high (RF 0.92, SVM 0.91)
 while label-permuted AUROC collapses to chance (RF 0.50, SVM 0.49).
+
+The patient-level pathology result does not hinge on the patch-pooling choice
+(`src/pooling_ablation.py`): RF AUROC stays above chance under mean-only (0.94), min-only
+(0.87), max-only (0.85), and the reported concatenated min+max+mean (0.81) pooling.
 
 ## Figures
 
