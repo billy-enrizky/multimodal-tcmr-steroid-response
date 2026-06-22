@@ -4,6 +4,14 @@ Code accompanying a study on predicting histological steroid response in liver-t
 recipients with T-cell mediated rejection (TCMR), integrating whole-slide pathology
 (UNI-2-h embeddings) with clinical data.
 
+## Table of Contents
+
+- [Pipeline](#pipeline)
+- [Setup](#setup)
+- [Reproduce](#reproduce)
+- [Data availability](#data-availability)
+- [License](#license)
+
 ## Pipeline
 
 1. Preprocess: tile whole-slide H&E images into 224x224 patches; filter to portal tract
@@ -30,6 +38,7 @@ uv run python -m src.run_analysis    # pooled-OOF CIs (results.csv) + DeLong mat
 uv run python -m src.evaluation      # KFold + LOPO + label-permutation control
 uv run python -m src.robustness      # patch-count / order / color-baseline checks
 uv run python -m src.supplementary   # PCA scree, hyperparameter grid, variable encoding
+uv run python -m src.baseline_severity  # baseline-severity confound + inter-biopsy interval
 uv run --extra test python -m pytest tests -v   # unit tests
 ```
 
