@@ -1,0 +1,25 @@
+[project]
+name = "multimodal-tcmr-steroid-response"
+version = "0.1.0"
+description = "Multimodal pathology and clinical prediction of histological steroid response in liver-transplant T-cell mediated rejection."
+requires-python = ">=3.10"
+license = { text = "Apache-2.0" }
+dependencies = [
+    "numpy",
+    "pandas",
+    "scikit-learn",
+    "scipy",
+    "matplotlib",
+    "Pillow",
+    "PyYAML",
+]
+
+[project.optional-dependencies]
+test = ["pytest"]
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["src*"]

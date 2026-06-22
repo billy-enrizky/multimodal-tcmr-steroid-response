@@ -1,0 +1,6 @@
+# Copy to config.yaml and fill in local paths. No data is shipped with this repo.
+clinical_csv: path/to/clinical_data.csv
+feature_pickles:
+  - path/to/response_features.pkl
+  - path/to/no_response_features.pkl
+output_dir: outputs

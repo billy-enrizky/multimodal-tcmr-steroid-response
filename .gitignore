@@ -1,0 +1,32 @@
+# Patient-identifiable data and large binaries must never be published.
+*.svs
+*.ndpi
+*.tif
+*.tiff
+*.pkl
+*.npy
+*.npz
+*.zip
+*.ckpt
+*.pt
+*.pth
+
+# Clinical/tabular data containing dates or identifiers
+*.csv
+
+
+
+# Derived images
+*_attention_maps*/
+*_heatmaps*/
+patches_*/
+
+# Local config (user supplies real paths)
+config.yaml
+
+# Logs and OS cruft
+*.log
+.DS_Store
+__pycache__/
+.pytest_cache/
+.venv/
