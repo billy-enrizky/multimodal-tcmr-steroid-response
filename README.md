@@ -19,18 +19,18 @@ recipients with T-cell mediated rejection (TCMR), integrating whole-slide pathol
 ## Setup
 
 ```bash
-pip install -r requirements.txt
+uv sync --extra test                 # create the environment from pyproject.toml
 cp config.example.yaml config.yaml   # then edit paths to your local data
 ```
 
 ## Reproduce
 
 ```bash
-python -m src.run_analysis      # pooled-OOF CIs (results.csv) + DeLong matrix
-python -m src.evaluation        # KFold + LOPO + label-permutation control
-python -m src.robustness        # patch-count / order / color-baseline checks
-python -m src.supplementary     # PCA scree, hyperparameter grid, variable encoding
-python -m pytest tests -v       # unit tests
+uv run python -m src.run_analysis    # pooled-OOF CIs (results.csv) + DeLong matrix
+uv run python -m src.evaluation      # KFold + LOPO + label-permutation control
+uv run python -m src.robustness      # patch-count / order / color-baseline checks
+uv run python -m src.supplementary   # PCA scree, hyperparameter grid, variable encoding
+uv run --extra test python -m pytest tests -v   # unit tests
 ```
 
 Outputs are written to the `output_dir` set in `config.yaml`.
