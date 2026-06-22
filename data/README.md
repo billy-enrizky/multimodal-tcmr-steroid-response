@@ -9,6 +9,15 @@ A CSV with one row per patient:
 - `outcome`: integer 0/1 label.
 - Additional clinical columns (numeric or categorical) used as features.
 
+## baseline_csv
+
+A CSV with one row per patient (used by `src/baseline_severity.py`):
+- `patient_id`: string/int identifier.
+- `outcome`: integer 0/1 label (1 = non-response).
+- `baseline_rai`: numeric baseline rejection-activity score.
+- `followup_rai` (optional): numeric follow-up rejection-activity score.
+- `interbiopsy_days` (optional): integer days between the two biopsies.
+
 ## feature_pickles
 
 A list of pickle files, each a dict with:
